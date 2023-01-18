@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "title": "Olma",
+        "price": "100000",
+        "branchId": 1
+    },
+    {
+        "id": 2,
+        "title": "Anor",
+        "price": "200000",
+        "branchId": 2
+    }
+]
