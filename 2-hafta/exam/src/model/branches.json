@@ -10,5 +10,11 @@
         "name": "Karzika chilonzor",
         "address": "Yunusuobod, Chilonzor metro",
         "marketId": 2
+    },
+    {
+        "branchId": 3,
+        "name": "Havas hasanboy",
+        "address": "Yunusuobod, Zenit",
+        "marketId": 3
     }
 ]

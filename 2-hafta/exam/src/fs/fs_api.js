@@ -20,15 +20,38 @@ function get_token(login, pass, res){
 
     if(user[0].name == login && user[0].password == pass){
         let token = jwt.sign({name: `${login}`}, process.env.SECRET_KEY, {
-            expiresIn: '1h'
+            expiresIn: '10s'
         })
         res.writeHead(200,{"Content-Type": "application/json"})
         return res.end(JSON.stringify(token))
     }
 }
 
+function get_markets(res,id){
+    let rez = []
+    if (!id){
+        let markets = file_read('markets.json')
+        let branches = file_read('branches.json')
+        markets.forEach(market => {
+            branches.forEach(branch => {
+                if(market.marketId == branch.marketId){
+                    delete branch.marketId
+                    market['branches']=[]
+                    market.branches.push(branch)
+                }
+
+            })
+        });
+        res.writeHead(200,{"Content-Type": "application/json"})
+        return res.end(JSON.stringify(markets,null, 2));
+
+    }
+
+}
+
 export {
     file_read,
     write_to_file,
-    get_token
+    get_token,
+    get_markets
 }
