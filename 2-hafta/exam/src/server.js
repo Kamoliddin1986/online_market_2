@@ -3,7 +3,8 @@ import {
     file_read, 
     write_to_file,
     get_token,
-    get_markets
+    get_markets,
+    get_branches
 } from './fs/fs_api.js'
 import url from 'url'
 import jwt from 'jsonwebtoken'
@@ -36,6 +37,10 @@ http .createServer(async(req,res) => {
 if(req.method == "GET"){
     if(req_name == 'markets'){
         get_markets(res,req_id)
+    }
+
+    if(req_name == 'branches'){
+        get_branches(res,req_id)
     }
 }
 

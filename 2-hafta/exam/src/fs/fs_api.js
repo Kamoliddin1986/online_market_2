@@ -47,11 +47,47 @@ function get_markets(res, id) {
         return res.end(JSON.stringify(market, null, 2));
       }
     });
-
   } else {
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(JSON.stringify(markets, null, 2));
   }
 }
 
-export { file_read, write_to_file, get_token, get_markets };
+function get_branches(res, id) {
+
+  let branches = file_read("branches.json");
+  let workers = file_read("workers.json");
+  let products = file_read("products.json");
+  branches.forEach((branch) => {
+      branch["workers"] = [];
+    workers.forEach((worker) => {
+      if (worker.branchId == branch.branchId) {
+        delete worker.branchId;
+        branch.workers.push(worker);
+      }
+    });
+    
+    console.log(JSON.stringify(branches,null,2));
+    branch["products"] = [];
+    products.forEach((product) => {
+      if (product.branchId == branch.branchId) {
+        delete product.branchId;
+        branch.products.push(product);
+      }
+    });    
+  });
+
+  if (id) {
+    branches.forEach((branch) => {
+      if (branch.branchId == id) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify(branch, null, 2));
+      }
+    });
+  } else {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify(branches, null, 2));
+  }
+}
+
+export { file_read, write_to_file, get_token, get_markets, get_branches };
