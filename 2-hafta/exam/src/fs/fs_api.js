@@ -90,4 +90,37 @@ function get_branches(res, id) {
   }
 }
 
-export { file_read, write_to_file, get_token, get_markets, get_branches };
+function get_products(res, id) {
+
+  let products = file_read("products.json");
+
+  if (id) {
+    products.forEach((product) => {
+      if (product.id == id) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify(product, null, 2));
+      }
+    });
+  } else {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify(products, null, 2));
+  }
+}
+
+function get_workers(res, id) {
+
+  let workers = file_read("workers.json");
+
+  if (id) {
+    workers.forEach((worker) => {
+      if (worker.id == id) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify(worker, null, 2));
+      }
+    });
+  } else {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify(workers, null, 2));
+  }
+}
+export { file_read, write_to_file, get_token, get_markets, get_branches, get_products, get_workers };

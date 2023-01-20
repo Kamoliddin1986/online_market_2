@@ -4,7 +4,9 @@ import {
     write_to_file,
     get_token,
     get_markets,
-    get_branches
+    get_branches,
+    get_products,
+    get_workers
 } from './fs/fs_api.js'
 import url from 'url'
 import jwt from 'jsonwebtoken'
@@ -42,6 +44,15 @@ if(req.method == "GET"){
     if(req_name == 'branches'){
         get_branches(res,req_id)
     }
+    
+    if(req_name == 'products'){
+        get_products(res,req_id)
+    }
+    
+    if(req_name == 'workers'){
+        get_workers(res,req_id)
+    }
+
 }
 
 
