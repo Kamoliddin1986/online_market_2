@@ -10,5 +10,11 @@
         "name": "Toshmat",
         "phoneNumber": "998901234568",
         "branchId": 2
+    },
+    {
+        "id": 3,
+        "name": "Toshmat New",
+        "phoneNumber": "998901234568",
+        "branchId": 2
     }
 ]

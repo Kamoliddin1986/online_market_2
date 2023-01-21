@@ -141,18 +141,24 @@ function check_keys(obj){
 }
 
 function post_markets(res, market){
+  let chekByValue= check_keys(market)
+  if(chekByValue.bool){
   let markets = file_read("markets.json");
-  let chekByValue= check_keys(market)  
+  let bool = false
   markets.forEach(mark => {
     if(mark.name == market.name){
-      bool = false
+      bool = true    
     }
   })
-  if(chekByValue.bool){
+  if(bool){
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end(`"${market.name}"- market name is exists!`)
+  }else{
     markets.push({id: markets.length+1, ...market})
     write_to_file("markets.json", markets)
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end("market was added!")
+  }
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end(`${chekByValue.key} is not correct!`)
@@ -161,18 +167,24 @@ function post_markets(res, market){
 }
 
 function post_branches(res, branch){
+  let chekByValue = check_keys(branch) 
+  if(chekByValue.bool){
   let branches = file_read("branches.json");
-  let chekByValue= check_keys(branch) 
+  let bool = true
   branches.forEach(br => {
     if(br.name == branch.name){
       bool = false
     }    
   })
-  if(chekByValue.bool){
+  if(bool){
     branches.push({id: branches.length+1, ...branch})
     write_to_file("branches.json", branches)
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end("Branch was added!")
+  }else{
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end(`"${branch.name}"  branch name is exists!`)
+  }
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end(`${chekByValue.key} is not correct!`)
@@ -181,18 +193,24 @@ function post_branches(res, branch){
 }
 
 function post_products(res, product){
-  let products = file_read("products.json");
   let chekByValue= check_keys(product) 
+  if(chekByValue.bool){
+  let products = file_read("products.json");
+  let bool = true
   products.forEach(pr => {
     if(pr.title == product.title){
       bool = false
     }    
   })
-  if(chekByValue.bool){
+  if(bool){
     products.push({id: products.length+1, ...product})
     write_to_file("products.json", products)
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end("product was added!")
+  }else{
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end(`"${product.title}" product name is exists!`)
+  }
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end(`${chekByValue.key} is not correct!`)
@@ -201,18 +219,24 @@ function post_products(res, product){
 }
 
 function post_workers(res, worker){
-  let workers = file_read("workers.json");
   let chekByValue= check_keys(worker) 
+  if(chekByValue.bool){
+  let workers = file_read("workers.json");
+  let bool = true
   workers.forEach(wk => {
     if(wk.name == worker.name){
       bool = false
     }    
   })
-  if(chekByValue.bool){
+  if(bool){
     workers.push({id: workers.length+1, ...worker})
     write_to_file("workers.json", workers)
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end("worker was added!")
+  }else{
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end(`"${worker.name}" woker is exists!`)
+  }
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end(`${chekByValue.key} is not correct!`)
