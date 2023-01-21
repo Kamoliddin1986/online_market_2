@@ -125,76 +125,98 @@ function get_workers(res, id) {
 }
 
 function check_keys(obj){
-  let bool = true
-  for(let key in obj){
-    if((obj[key].trim()).length == 0){
-      bool = false
-    }
-   }
-   if(bool){
-    return true
-   }else{ 
-    return false
+  let ret_obj = {
+    bool: true
   }
+  for(let k in obj){
+    if(typeof(obj[k])=== 'string'){
+      obj[k] = obj[k].trim()
+    }
+    if(obj[k].length == 0){
+      ret_obj.bool = false
+      ret_obj['key'] = `${k}`
+    } 
+   }
+   return ret_obj  
 }
 
 function post_markets(res, market){
   let markets = file_read("markets.json");
-  let bool= check_keys(market)  
+  let chekByValue= check_keys(market)  
   markets.forEach(mark => {
     if(mark.name == market.name){
       bool = false
     }
   })
-  if(bool){
+  if(chekByValue.bool){
     markets.push({id: markets.length+1, ...market})
     write_to_file("markets.json", markets)
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end("market was added!")
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end("Please recheck !!!")
+    return res.end(`${chekByValue.key} is not correct!`)
   }
 
 }
 
 function post_branches(res, branch){
   let branches = file_read("branches.json");
-  let bool= check_keys(branch) 
+  let chekByValue= check_keys(branch) 
   branches.forEach(br => {
     if(br.name == branch.name){
       bool = false
     }    
   })
-  if(bool){
+  if(chekByValue.bool){
     branches.push({id: branches.length+1, ...branch})
     write_to_file("branches.json", branches)
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end("Branch was added!")
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end("Please recheck new branch information!!!")
+    return res.end(`${chekByValue.key} is not correct!`)
   }
 
 }
 
 function post_products(res, product){
   let products = file_read("products.json");
-  let bool= check_keys(product) 
+  let chekByValue= check_keys(product) 
   products.forEach(pr => {
     if(pr.title == product.title){
       bool = false
     }    
   })
-  if(bool){
+  if(chekByValue.bool){
     products.push({id: products.length+1, ...product})
     write_to_file("products.json", products)
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end("product was added!")
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end("Please recheck new product information!!!")
+    return res.end(`${chekByValue.key} is not correct!`)
   }
 
 }
-export { file_read,post_branches,post_products, post_markets, write_to_file, get_token, get_markets, get_branches, get_products, get_workers };
+
+function post_workers(res, worker){
+  let workers = file_read("workers.json");
+  let chekByValue= check_keys(worker) 
+  workers.forEach(wk => {
+    if(wk.name == worker.name){
+      bool = false
+    }    
+  })
+  if(chekByValue.bool){
+    workers.push({id: workers.length+1, ...worker})
+    write_to_file("workers.json", workers)
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end("worker was added!")
+  }else{
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end(`${chekByValue.key} is not correct!`)
+  }
+
+}
+export { file_read, post_branches, post_workers, post_products, post_markets, write_to_file, get_token, get_markets, get_branches, get_products, get_workers };

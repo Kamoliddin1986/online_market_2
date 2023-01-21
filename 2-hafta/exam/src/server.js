@@ -9,7 +9,8 @@ import {
     get_workers,
     post_markets,
     post_branches,
-    post_products
+    post_products,
+    post_workers
 } from './fs/fs_api.js'
 import url from 'url'
 import jwt from 'jsonwebtoken'
@@ -81,6 +82,14 @@ if(req.method == 'POST'){
             let newProduct = JSON.parse(chunk)
 
             post_products(res,newProduct)    
+        })
+    }
+
+    if(req_name == 'workers'){
+        req.on('data', chunk => {
+            let newWorker = JSON.parse(chunk)
+
+            post_workers(res,newWorker)    
         })
     }
 }
