@@ -6,7 +6,10 @@ import {
     get_markets,
     get_branches,
     get_products,
-    get_workers
+    get_workers,
+    post_markets,
+    post_branches,
+    post_products
 } from './fs/fs_api.js'
 import url from 'url'
 import jwt from 'jsonwebtoken'
@@ -55,6 +58,32 @@ if(req.method == "GET"){
 
 }
 
+
+if(req.method == 'POST'){
+    if(req_name == 'markets'){
+        req.on('data', chunk => {
+            let newMarket = JSON.parse(chunk)
+
+            post_markets(res,newMarket)    
+        })
+    }
+
+    if(req_name == 'branches'){
+        req.on('data', chunk => {
+            let newBranch = JSON.parse(chunk)
+
+            post_branches(res,newBranch)    
+        })
+    }
+
+    if(req_name == 'products'){
+        req.on('data', chunk => {
+            let newProduct = JSON.parse(chunk)
+
+            post_products(res,newProduct)    
+        })
+    }
+}
 
 }).listen(5555, ()=>{
     console.log("server is running on 5555");

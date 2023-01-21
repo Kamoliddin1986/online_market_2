@@ -16,5 +16,11 @@
         "name": "Havas hasanboy",
         "address": "Yunusuobod, Zenit",
         "marketId": 3
+    },
+    {
+        "id": 4,
+        "name": "baraka Yunusobod",
+        "address": "Yunusuobod, 8-kvartal",
+        "marketId": 4
     }
 ]

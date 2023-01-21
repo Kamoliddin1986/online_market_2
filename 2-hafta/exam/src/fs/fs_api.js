@@ -123,4 +123,78 @@ function get_workers(res, id) {
     return res.end(JSON.stringify(workers, null, 2));
   }
 }
-export { file_read, write_to_file, get_token, get_markets, get_branches, get_products, get_workers };
+
+function check_keys(obj){
+  let bool = true
+  for(let key in obj){
+    if((obj[key].trim()).length == 0){
+      bool = false
+    }
+   }
+   if(bool){
+    return true
+   }else{ 
+    return false
+  }
+}
+
+function post_markets(res, market){
+  let markets = file_read("markets.json");
+  let bool= check_keys(market)  
+  markets.forEach(mark => {
+    if(mark.name == market.name){
+      bool = false
+    }
+  })
+  if(bool){
+    markets.push({id: markets.length+1, ...market})
+    write_to_file("markets.json", markets)
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end("market was added!")
+  }else{
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end("Please recheck !!!")
+  }
+
+}
+
+function post_branches(res, branch){
+  let branches = file_read("branches.json");
+  let bool= check_keys(branch) 
+  branches.forEach(br => {
+    if(br.name == branch.name){
+      bool = false
+    }    
+  })
+  if(bool){
+    branches.push({id: branches.length+1, ...branch})
+    write_to_file("branches.json", branches)
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end("Branch was added!")
+  }else{
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end("Please recheck new branch information!!!")
+  }
+
+}
+
+function post_products(res, product){
+  let products = file_read("products.json");
+  let bool= check_keys(product) 
+  products.forEach(pr => {
+    if(pr.title == product.title){
+      bool = false
+    }    
+  })
+  if(bool){
+    products.push({id: products.length+1, ...product})
+    write_to_file("products.json", products)
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end("product was added!")
+  }else{
+    res.writeHead(200, { "Content-Type": "application/json" })
+    return res.end("Please recheck new product information!!!")
+  }
+
+}
+export { file_read,post_branches,post_products, post_markets, write_to_file, get_token, get_markets, get_branches, get_products, get_workers };

@@ -1,12 +1,12 @@
 [
     {
-        "id": 1,
+        "workerId": 1,
         "name": "Eshmat",
         "phoneNumber": "998901234567",
         "branchId": 1
     },
     {
-        "id": 2,
+        "workerId": 2,
         "name": "Toshmat",
         "phoneNumber": "998901234568",
         "branchId": 2
