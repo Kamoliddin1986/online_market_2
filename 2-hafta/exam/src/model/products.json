@@ -12,8 +12,14 @@
         "branchId": 2
     },
     {
-        "id": 3,
+        "productId": 3,
         "title": "Anjir",
+        "price": "200000",
+        "branchId": 3
+    },
+    {
+        "productId": 4,
+        "title": "Anjir Yangi",
         "price": "200000",
         "branchId": 3
     }

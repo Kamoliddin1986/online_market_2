@@ -1,16 +1,14 @@
 import http from 'http'
 import { 
-    file_read, 
-    write_to_file,
+    file_read,
     get_token,
     get_markets,
     get_branches,
     get_products,
     get_workers,
-    post_markets,
-    post_branches,
-    post_products,
-    post_workers
+    post_file,
+    update_files,
+    delete_files
 } from './fs/fs_api.js'
 import url from 'url'
 import jwt from 'jsonwebtoken'
@@ -60,38 +58,23 @@ if(req.method == "GET"){
 }
 
 
-if(req.method == 'POST'){
-    if(req_name == 'markets'){
+if(req.method == 'POST'){  
+
         req.on('data', chunk => {
             let newMarket = JSON.parse(chunk)
+            post_file(res,newMarket,req_name)    
+        })    
+}
 
-            post_markets(res,newMarket)    
-        })
-    }
-
-    if(req_name == 'branches'){
+if (req.method == 'PUT'){
         req.on('data', chunk => {
-            let newBranch = JSON.parse(chunk)
-
-            post_branches(res,newBranch)    
+            let update_info = JSON.parse(chunk)
+            update_files(res,update_info,req_name,req_id)
         })
-    }
+}
 
-    if(req_name == 'products'){
-        req.on('data', chunk => {
-            let newProduct = JSON.parse(chunk)
-
-            post_products(res,newProduct)    
-        })
-    }
-
-    if(req_name == 'workers'){
-        req.on('data', chunk => {
-            let newWorker = JSON.parse(chunk)
-
-            post_workers(res,newWorker)    
-        })
-    }
+if (req.method == 'DELETE'){
+    delete_files(res, req_name, req_id)
 }
 
 }).listen(5555, ()=>{

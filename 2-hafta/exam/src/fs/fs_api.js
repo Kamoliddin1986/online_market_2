@@ -140,24 +140,30 @@ function check_keys(obj){
    return ret_obj  
 }
 
-function post_markets(res, market){
-  let chekByValue= check_keys(market)
+
+function post_file(res, nwData, fileName){
+  let chekByValue = check_keys(nwData) 
   if(chekByValue.bool){
-  let markets = file_read("markets.json");
-  let bool = false
-  markets.forEach(mark => {
-    if(mark.name == market.name){
-      bool = true    
+  let allData = file_read(`${fileName}.json`);
+  let bool = true
+  allData.forEach(data => {
+      if((data.title || data.name) == (nwData.title || nwData.name)){
+        bool = false
+      } 
+  })
+  if(bool){
+    allData[allData.length] ={}
+    allData[allData.length-1][`${fileName.slice(0,-1)}Id`] = allData.length
+    for(let i in nwData){
+
+      allData[allData.length-1][`${i}`] = nwData[`${i}`]
     }
-  })
-  if(bool){
+    write_to_file(`${fileName}.json`, allData)
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`"${market.name}"- market name is exists!`)
+    return res.end(`${fileName.slice(0,-1)} was added!!!`)
   }else{
-    markets.push({id: markets.length+1, ...market})
-    write_to_file("markets.json", markets)
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end("market was added!")
+    return res.end(`"${nwData.name || nwData.title}" is exists!`)
   }
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
@@ -166,81 +172,44 @@ function post_markets(res, market){
 
 }
 
-function post_branches(res, branch){
-  let chekByValue = check_keys(branch) 
-  if(chekByValue.bool){
-  let branches = file_read("branches.json");
-  let bool = true
-  branches.forEach(br => {
-    if(br.name == branch.name){
-      bool = false
+function update_files(res,nwData, fileName, id){
+  let allData = file_read(`${fileName}.json`)
+  let bool = false
+  allData.forEach(data => {
+    if(data[`${fileName.slice(0,-1)}Id`]== id){
+      for(let k in data){
+        data[k] = nwData[k] || data[k]
+        bool = true
+      }      
     }    
   })
   if(bool){
-    branches.push({id: branches.length+1, ...branch})
-    write_to_file("branches.json", branches)
+    write_to_file(`${fileName}.json`, allData)
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end("Branch was added!")
+    return res.end(`${fileName.slice(0,-1)}Id ${id} is updated!!`)
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`"${branch.name}"  branch name is exists!`)
+    return res.end(`${fileName.slice(0,-1)}Id ${id} is not founded!!`)
   }
-  }else{
-    res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`${chekByValue.key} is not correct!`)
-  }
-
 }
 
-function post_products(res, product){
-  let chekByValue= check_keys(product) 
-  if(chekByValue.bool){
-  let products = file_read("products.json");
-  let bool = true
-  products.forEach(pr => {
-    if(pr.title == product.title){
-      bool = false
+
+function delete_files(res, fileName, id){
+  let allData = file_read(`${fileName}.json`)
+  let bool = false
+  allData.forEach((data,inx) => {
+    if(data[`${fileName.slice(0,-1)}Id`]== id){
+      allData.splice(inx,1)
+      bool = true    
     }    
   })
   if(bool){
-    products.push({id: products.length+1, ...product})
-    write_to_file("products.json", products)
+    write_to_file(`${fileName}.json`, allData)
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end("product was added!")
+    return res.end(`${fileName.slice(0,-1)}Id ${id} is deleted!!`)
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`"${product.title}" product name is exists!`)
+    return res.end(`${fileName.slice(0,-1)}Id ${id} is not founded!!`)
   }
-  }else{
-    res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`${chekByValue.key} is not correct!`)
-  }
-
 }
-
-function post_workers(res, worker){
-  let chekByValue= check_keys(worker) 
-  if(chekByValue.bool){
-  let workers = file_read("workers.json");
-  let bool = true
-  workers.forEach(wk => {
-    if(wk.name == worker.name){
-      bool = false
-    }    
-  })
-  if(bool){
-    workers.push({id: workers.length+1, ...worker})
-    write_to_file("workers.json", workers)
-    res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end("worker was added!")
-  }else{
-    res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`"${worker.name}" woker is exists!`)
-  }
-  }else{
-    res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`${chekByValue.key} is not correct!`)
-  }
-
-}
-export { file_read, post_branches, post_workers, post_products, post_markets, write_to_file, get_token, get_markets, get_branches, get_products, get_workers };
+export { file_read, update_files, delete_files, post_file, write_to_file, get_token, get_markets, get_branches, get_products, get_workers };

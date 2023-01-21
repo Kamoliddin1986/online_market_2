@@ -18,13 +18,13 @@
         "marketId": 3
     },
     {
-        "id": 4,
+        "branchId": 4,
         "name": "baraka Yunusobod",
         "address": "Yunusuobod, 8-kvartal",
         "marketId": 4
     },
     {
-        "id": 5,
+        "branchId": 5,
         "name": "New branch",
         "address": "Yunusuobod, 8-kvartal",
         "marketId": 5
