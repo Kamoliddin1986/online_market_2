@@ -12,7 +12,7 @@ import {
 } from './fs/fs_api.js'
 import url from 'url'
 import jwt from 'jsonwebtoken'
-import env from 'dotenv'
+
 
 let user = file_read('users.json')
 
@@ -30,17 +30,13 @@ http .createServer(async(req,res) => {
     }
         
 }
-// if(req_name!='login'){    
-//     try {
-//         await jwt.verify(req.headers.authorization, process.env.SECRET_KEY)
-// } catch (error) {
-//     console.log('token is not actual');        
-// }
-// }
-
-if(req.method == "GET"){
-    if(req_name == 'markets'){
-        get_markets(res,req_id)
+if(req_name!='login'){    
+    try {
+        await jwt.verify(req.headers.authorization, process.env.SECRET_KEY)
+        
+        if(req.method == "GET"){
+            if(req_name == 'markets'){
+                get_markets(res,req_id)
     }
 
     if(req_name == 'branches'){
@@ -59,23 +55,31 @@ if(req.method == "GET"){
 
 
 if(req.method == 'POST'){  
-
-        req.on('data', chunk => {
-            let newMarket = JSON.parse(chunk)
-            post_file(res,newMarket,req_name)    
-        })    
+    
+    req.on('data', chunk => {
+        let newMarket = JSON.parse(chunk)
+        post_file(res,newMarket,req_name)    
+    })    
 }
 
 if (req.method == 'PUT'){
-        req.on('data', chunk => {
+    req.on('data', chunk => {
             let update_info = JSON.parse(chunk)
             update_files(res,update_info,req_name,req_id)
         })
+    }
+    
+    if (req.method == 'DELETE'){
+        delete_files(res, req_name, req_id)
+    }
+
+    
+} catch (error) {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end('Token is not actual!!!');      
+}
 }
 
-if (req.method == 'DELETE'){
-    delete_files(res, req_name, req_id)
-}
 
 }).listen(5555, ()=>{
     console.log("server is running on 5555");

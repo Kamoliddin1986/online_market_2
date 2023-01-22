@@ -10,5 +10,17 @@
     {
         "marketId": 3,
         "name": "Havas3"
+    },
+    {
+        "marketId": 4,
+        "name": "Bozor"
+    },
+    {
+        "marketId": 5,
+        "name": "Bozor2"
+    },
+    {
+        "marketId": 6,
+        "name": "Uch qaxramon"
     }
 ]

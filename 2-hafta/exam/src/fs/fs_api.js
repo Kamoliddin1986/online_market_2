@@ -20,7 +20,7 @@ function get_token(login, pass, res) {
 
   if (user[0].name == login && user[0].password == pass) {
     let token = jwt.sign({ name: `${login}` }, process.env.SECRET_KEY, {
-      expiresIn: "10s",
+      expiresIn: "2h",
     });
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(JSON.stringify(token));
@@ -67,7 +67,7 @@ function get_branches(res, id) {
       }
     });
     
-    console.log(JSON.stringify(branches,null,2));
+
     branch["products"] = [];
     products.forEach((product) => {
       if (product.branchId == branch.branchId) {
@@ -96,7 +96,7 @@ function get_products(res, id) {
 
   if (id) {
     products.forEach((product) => {
-      if (product.id == id) {
+      if (product.productId == id) {
         res.writeHead(200, { "Content-Type": "application/json" });
         return res.end(JSON.stringify(product, null, 2));
       }
@@ -113,7 +113,7 @@ function get_workers(res, id) {
 
   if (id) {
     workers.forEach((worker) => {
-      if (worker.id == id) {
+      if (worker.workerId == id) {
         res.writeHead(200, { "Content-Type": "application/json" });
         return res.end(JSON.stringify(worker, null, 2));
       }
@@ -140,11 +140,12 @@ function check_keys(obj){
    return ret_obj  
 }
 
-
 function post_file(res, nwData, fileName){
   let chekByValue = check_keys(nwData) 
+  let idName = (fileName == 'branches'? fileName.slice(0,-2)+'Id': fileName.slice(0,-1)+'Id')
+  fileName = `${fileName}.json`
   if(chekByValue.bool){
-  let allData = file_read(`${fileName}.json`);
+  let allData = file_read(fileName);
   let bool = true
   allData.forEach(data => {
       if((data.title || data.name) == (nwData.title || nwData.name)){
@@ -153,14 +154,13 @@ function post_file(res, nwData, fileName){
   })
   if(bool){
     allData[allData.length] ={}
-    allData[allData.length-1][`${fileName.slice(0,-1)}Id`] = allData.length
+    allData[allData.length-1][idName] = allData.length
     for(let i in nwData){
-
       allData[allData.length-1][`${i}`] = nwData[`${i}`]
     }
-    write_to_file(`${fileName}.json`, allData)
+    write_to_file(fileName, allData)
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`${fileName.slice(0,-1)} was added!!!`)
+    return res.end(`${idName.slice(0,-2)} was added!!!`)
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
     return res.end(`"${nwData.name || nwData.title}" is exists!`)
@@ -173,43 +173,65 @@ function post_file(res, nwData, fileName){
 }
 
 function update_files(res,nwData, fileName, id){
-  let allData = file_read(`${fileName}.json`)
-  let bool = false
+  let idName = (fileName == 'branches'? fileName.slice(0,-2)+'Id': fileName.slice(0,-1)+'Id')
+  fileName = `${fileName}.json`
+  let allData = file_read(fileName)
+  let bool = true
+
   allData.forEach(data => {
-    if(data[`${fileName.slice(0,-1)}Id`]== id){
-      for(let k in data){
-        data[k] = nwData[k] || data[k]
-        bool = true
-      }      
-    }    
-  })
+
+    if(((data.title || data.name) == (nwData.title || nwData.name)) && (data[idName] != id)){
+      bool = false
+    } 
+})
+  
   if(bool){
-    write_to_file(`${fileName}.json`, allData)
+
+    let idBool = false
+    allData.forEach(data => {
+      if(data[idName]== id){
+        for(let k in data){
+          data[k] = nwData[k] || data[k]
+          idBool = true
+        }      
+      }    
+    })
+    
+    if(!idBool){
+      res.writeHead(200, { "Content-Type": "application/json" })
+      return res.end(`${idName} ${id} is not founded!!`)   
+    }
+
+    write_to_file(fileName, allData)
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`${fileName.slice(0,-1)}Id ${id} is updated!!`)
+    return res.end(`${idName} ${id} is updated!!`)
+  
   }else{
+
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`${fileName.slice(0,-1)}Id ${id} is not founded!!`)
+    return res.end(`${nwData.title || nwData.name} is exists!!`)
+
   }
 }
 
-
 function delete_files(res, fileName, id){
-  let allData = file_read(`${fileName}.json`)
+  let idName = (fileName == 'branches'? fileName.slice(0,-2)+'Id': fileName.slice(0,-1)+'Id')
+  fileName = `${fileName}.json`
+  let allData = file_read(fileName)
   let bool = false
   allData.forEach((data,inx) => {
-    if(data[`${fileName.slice(0,-1)}Id`]== id){
+    if(data[idName]== id){
       allData.splice(inx,1)
       bool = true    
     }    
   })
   if(bool){
-    write_to_file(`${fileName}.json`, allData)
+    write_to_file(fileName, allData)
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`${fileName.slice(0,-1)}Id ${id} is deleted!!`)
+    return res.end(`${idName} ${id} is deleted!!`)
   }else{
     res.writeHead(200, { "Content-Type": "application/json" })
-    return res.end(`${fileName.slice(0,-1)}Id ${id} is not founded!!`)
+    return res.end(`${idName} ${id} is not founded!!`)
   }
 }
 export { file_read, update_files, delete_files, post_file, write_to_file, get_token, get_markets, get_branches, get_products, get_workers };

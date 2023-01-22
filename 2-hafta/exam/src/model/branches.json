@@ -28,5 +28,11 @@
         "name": "New branch",
         "address": "Yunusuobod, 8-kvartal",
         "marketId": 5
+    },
+    {
+        "branchId": 6,
+        "name": "kiyim bozor",
+        "address": "Yunusuobod",
+        "marketId": 6
     }
 ]

@@ -22,5 +22,17 @@
         "title": "Anjir Yangi",
         "price": "200000",
         "branchId": 3
+    },
+    {
+        "productId": 5,
+        "title": "Banan",
+        "price": "111111",
+        "branchId": 1
+    },
+    {
+        "productId": 6,
+        "name": "Bodring",
+        "address": "Yunusuobod",
+        "marketId": 4
     }
 ]
