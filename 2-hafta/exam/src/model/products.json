@@ -30,9 +30,9 @@
         "branchId": 1
     },
     {
-        "productId": 6,
-        "name": "Bodring",
+        "productId": 7,
+        "name": "Shoftoli",
         "address": "Yunusuobod",
-        "marketId": 4
+        "branchId": 6
     }
 ]

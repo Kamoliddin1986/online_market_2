@@ -141,27 +141,27 @@ function get_workers(res, id) {
   let workers = file_read("workers.json");
 
   if (id) {
-    let idBool = false;
+    let idB = false;
     let rez;
 
     workers.forEach((worker) => {
       if (worker.workerId == id) {
-        idBool = true;
-        rez = worker;
+        idB = true;
+        rez = worker; 
       }
 
-      if (idBool) {
+    });
+      if (idB) {
         res.writeHead(200, { "Content-Type": "application/json" });
         return res.end(JSON.stringify(rez, null, 2));
       } else {
         res.writeHead(200, { "Content-Type": "application/json" });
-        return res.end(`WorkerId ${id} is not founded!!!`);
+        return res.end(`WorkerId ${id} is not founded!!!`); 
       }
-    });
   } else {
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(JSON.stringify(workers, null, 2));
-  }
+  } 
 }
 
 function check_keys(obj) {
